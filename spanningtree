@@ -1,0 +1,41 @@
+graph = {
+    0: [1, 2, 3, 4, 5],  # Main switch
+    1: [0, 21, 2],       # Spine switch
+    2: [0, 1, 22, 3],    
+    3: [0, 2, 23, 4],    
+    4: [0, 3, 24, 5],    
+    5: [0, 4, 25],       
+    6: [26, 7, 27],     
+    7: [6, 8, 28],       
+    8: [7, 9, 29],       
+    9: [8, 10],          
+    10: [9, 30],         
+    11: [12],            
+    ...,
+    20: [19]
+    21: [1], 22: [2], 23: [3], 24: [4], 25: [5],    #leaf switch
+    26: [6], 27: [6], 28: [7], 29: [8], 30: [10]
+}
+def dfs(graph, node, visited, parent):
+    visited[node] = True
+    for neighbor in graph[node]:
+        if not visited[neighbor]:
+            if dfs(graph, neighbor, visited, node):
+                return True  # Loop detected
+        elif neighbor != parent:
+            return True  
+    return False
+
+def find_spanning_tree(graph):
+    visited = [False] * len(graph)
+    loops = []
+    
+    for node in range(len(graph)):
+        if not visited[node]:
+            if dfs(graph, node, visited, -1):
+                loops.append(node)
+    
+    return loops
+
+loops_found = find_spanning_tree(graph)
+print("Loops detected at nodes:", loops_found)
