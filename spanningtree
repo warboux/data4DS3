@@ -44,6 +44,5 @@ def find_spanning_tree(graph):
     
     return loops
 
-# Now let's test with the fixed logic
 loops_found = find_spanning_tree(graph)
 print("Loops detected at nodes:", loops_found)
