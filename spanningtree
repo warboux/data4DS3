@@ -10,9 +10,16 @@ graph = {
     8: [7, 9, 29],       
     9: [8, 10],          
     10: [9, 30],         
-    11: [12],            
-    ...,
-    20: [19]
+    11: [0],            
+    12: [0], 
+    13: [0], 
+    14: [0], 
+    15: [0], 
+    16: [0], 
+    17: [0], 
+    18: [0], 
+    19: [0], 
+    20: [0], 
     21: [1], 22: [2], 23: [3], 24: [4], 25: [5],    #leaf switch
     26: [6], 27: [6], 28: [7], 29: [8], 30: [10]
 }
@@ -22,8 +29,8 @@ def dfs(graph, node, visited, parent):
         if not visited[neighbor]:
             if dfs(graph, neighbor, visited, node):
                 return True  # Loop detected
-        elif neighbor != parent:
-            return True  
+        elif neighbor != parent and len(graph[node]) > 1:  # Check for more than one neighbor
+            return True  # Loop detected
     return False
 
 def find_spanning_tree(graph):
@@ -37,5 +44,6 @@ def find_spanning_tree(graph):
     
     return loops
 
+# Now let's test with the fixed logic
 loops_found = find_spanning_tree(graph)
 print("Loops detected at nodes:", loops_found)
