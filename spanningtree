@@ -3,9 +3,9 @@ graph = {
     1: [0, 21, 2],       # Spine switch
     2: [0, 1, 22, 3],    
     3: [0, 2, 23, 4],    
-    4: [0, 3, 24, 5],    
-    5: [0, 4, 25],       
-    6: [26, 7, 27],     
+    4: [0, 3, 24],    
+    5: [0, 25],       
+    6: [26, 5, 7, 27],     
     7: [6, 8, 28],       
     8: [7, 9, 29],       
     9: [8, 10],          
@@ -23,26 +23,31 @@ graph = {
     21: [1], 22: [2], 23: [3], 24: [4], 25: [5],    #leaf switch
     26: [6], 27: [6], 28: [7], 29: [8], 30: [10]
 }
-def dfs(graph, node, visited, parent):
+def dfs(graph, node, visited, parent, ancestors, cycle_nodes):
     visited[node] = True
+    ancestors.add(node)  # Add to current DFS path
+
     for neighbor in graph[node]:
         if not visited[neighbor]:
-            if dfs(graph, neighbor, visited, node):
-                return True  # Loop detected
-        elif neighbor != parent and len(graph[node]) > 1:  # Check for more than one neighbor
-            return True  # Loop detected
-    return False
+            if dfs(graph, neighbor, visited, node, ancestors, cycle_nodes):
+                cycle_nodes.add(node)  # Mark the current node as part of a cycle
+        elif neighbor in ancestors and neighbor != parent:
+            cycle_nodes.add(node)  # Current node is part of a cycle
+            cycle_nodes.add(neighbor)  # Neighbor is part of the cycle
+
+    ancestors.remove(node)  # Backtrack
+    return node in cycle_nodes
 
 def find_spanning_tree(graph):
     visited = [False] * len(graph)
-    loops = []
-    
+    cycle_nodes = set()  # Nodes involved in cycles
+
     for node in range(len(graph)):
         if not visited[node]:
-            if dfs(graph, node, visited, -1):
-                loops.append(node)
-    
-    return loops
+            dfs(graph, node, visited, -1, set(), cycle_nodes)
 
+    return list(cycle_nodes)
+
+# Running the updated code
 loops_found = find_spanning_tree(graph)
 print("Loops detected at nodes:", loops_found)
