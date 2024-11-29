@@ -25,22 +25,22 @@ graph = {
 }
 def dfs(graph, node, visited, parent, ancestors, cycle_nodes):
     visited[node] = True
-    ancestors.add(node)  # Add to current DFS path
+    ancestors.add(node)  # Add to path
 
     for neighbor in graph[node]:
         if not visited[neighbor]:
             if dfs(graph, neighbor, visited, node, ancestors, cycle_nodes):
-                cycle_nodes.add(node)  # Mark the current node as part of a cycle
+                cycle_nodes.add(node)  # Mark current node as a cycle
         elif neighbor in ancestors and neighbor != parent:
-            cycle_nodes.add(node)  # Current node is part of a cycle
-            cycle_nodes.add(neighbor)  # Neighbor is part of the cycle
+            cycle_nodes.add(node)  # Current node is cycle
+            cycle_nodes.add(neighbor)  # Neighbor is cycle
 
-    ancestors.remove(node)  # Backtrack
+    ancestors.remove(node)  
     return node in cycle_nodes
 
 def find_spanning_tree(graph):
     visited = [False] * len(graph)
-    cycle_nodes = set()  # Nodes involved in cycles
+    cycle_nodes = set()  
 
     for node in range(len(graph)):
         if not visited[node]:
